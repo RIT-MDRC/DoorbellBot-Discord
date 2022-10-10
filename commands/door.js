@@ -1,24 +1,28 @@
 const { SlashCommandBuilder } = require('discord.js');
-
-function httpGetAsync(theUrl, callback) {
-  let xmlHttpReq = new XMLHttpRequest();
-  xmlHttpReq.onreadystatechange = function () {
-    if (xmlHttpReq.readyState == 4 && xmlHttpReq.status == 200)
-      callback(xmlHttpReq.responseText);
-  }
-  xmlHttpReq.open("GET", theUrl, true); // true for asynchronous 
-  xmlHttpReq.send(null);
-}
+http = require('node:http');
 
 module.exports = {
-        data: new SlashCommandBuilder()
-                .setName('door')
-                .setDescription('Roomba opens the main door'),
-        async execute(interaction) {
-		httpGetAsync('https://jsonplaceholder.typicode.com/posts', function(result){
-			console.log(result);
+	data: new SlashCommandBuilder()
+		.setName('door')
+		.setDescription('Roomba opens the main door'),
+	async execute(interaction) {
+		var message = '';
+		await http.get({
+			hostname: '129.21.121.208',
+			port: 8080,
+			path: '/door',
+			agent: false
+		}, (res) => {
+			var body = '';
+			res.setEncoding('utf8');
+			res.on('data', function(chunk){
+				body += chunk;
+			});
+			res.on('end', function() {
+				message = body;
+				return interaction.reply(message);
+			});
 		});
-                return interaction.reply('Roomba is on its way to the main door!');
-        },
+		//return interaction.reply(message);
+	},
 };
-
