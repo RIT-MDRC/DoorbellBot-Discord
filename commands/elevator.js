@@ -1,3 +1,4 @@
+const { IPaddress } = require('../config.json');
 const { SlashCommandBuilder } = require('discord.js');
 http = require('node:http');
 
@@ -8,7 +9,7 @@ module.exports = {
 	async execute(interaction) {
 		var message = '';
 		await http.get({
-			hostname: '129.21.121.208',
+			hostname: IPaddress,
 			port: 8080,
 			path: '/elevator',
 			agent: false

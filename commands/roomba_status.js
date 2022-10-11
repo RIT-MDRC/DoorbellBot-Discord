@@ -4,14 +4,14 @@ http = require('node:http');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('door')
-		.setDescription('Roomba opens the main door'),
+		.setName('roomba_status')
+		.setDescription('Where is Roomba currently headed?'),
 	async execute(interaction) {
 		var message = '';
 		await http.get({
 			hostname: IPaddress,
 			port: 8080,
-			path: '/door',
+			path: '/roomba_status',
 			agent: false
 		}, (res) => {
 			var body = '';
@@ -24,6 +24,5 @@ module.exports = {
 				return interaction.reply(message);
 			});
 		});
-		//return interaction.reply(message);
 	},
 };
